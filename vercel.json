@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd components && npm run generate-manifest && npm run build-storybook && cd ..",
+  "devCommand": "cd components && npm run storybook",
+  "installCommand": "cd components && npm ci&& cd ..",
+  "framework": null,
+  "outputDirectory": "./components/storybook-static"
+}
