@@ -97,7 +97,13 @@ const MutationsOverTimeTabs: FunctionComponent<MutationOverTimeTabsProps> = ({
 
     const tabs = mutationOverTimeDataPerLocation.map(({ location, data }) => ({
         title: location,
-        content: <MutationsOverTimeGrid data={data} colorScale={colorScale} />,
+        content: (
+            <MutationsOverTimeGrid
+                data={data}
+                colorScale={colorScale}
+                maxNumberOfGridRows={data.getFirstAxisKeys().length}
+            />
+        ),
     }));
 
     const toolbar = (

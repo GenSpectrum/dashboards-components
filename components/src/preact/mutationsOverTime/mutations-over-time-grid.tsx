@@ -12,14 +12,20 @@ import { formatProportion } from '../shared/table/formatProportion';
 export interface MutationsOverTimeGridProps {
     data: MutationOverTimeDataMap;
     colorScale: ColorScale;
+    maxNumberOfGridRows?: number;
 }
 
 const MAX_NUMBER_OF_GRID_ROWS = 100;
 const MUTATION_CELL_WIDTH_REM = 8;
 
-const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({ data, colorScale }) => {
+const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
+    data,
+    colorScale,
+    maxNumberOfGridRows,
+}) => {
+    const currentMaxNumberOfGridRows = maxNumberOfGridRows ?? MAX_NUMBER_OF_GRID_ROWS;
     const allMutations = data.getFirstAxisKeys();
-    const shownMutations = allMutations.slice(0, MAX_NUMBER_OF_GRID_ROWS);
+    const shownMutations = allMutations.slice(0, currentMaxNumberOfGridRows);
 
     const dates = data.getSecondAxisKeys();
 
@@ -27,10 +33,10 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({ 
 
     return (
         <>
-            {allMutations.length > MAX_NUMBER_OF_GRID_ROWS && (
+            {allMutations.length > currentMaxNumberOfGridRows && (
                 <div className='pl-2'>
-                    Showing {MAX_NUMBER_OF_GRID_ROWS} of {allMutations.length} mutations. You can narrow the filter to
-                    reduce the number of mutations.
+                    Showing {currentMaxNumberOfGridRows} of {allMutations.length} mutations. You can narrow the filter
+                    to reduce the number of mutations.
                 </div>
             )}
             {allMutations.length === 0 && (
