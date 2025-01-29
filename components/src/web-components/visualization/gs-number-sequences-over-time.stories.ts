@@ -38,6 +38,9 @@ const meta: Meta<NumberSequencesOverTimeProps> = {
             control: { type: 'check' },
         },
         pageSize: { control: 'object' },
+        height: {
+            control: 'text',
+        },
     },
     parameters: withComponentDocs({
         componentDocs: {
@@ -73,7 +76,6 @@ const Template: StoryObj<NumberSequencesOverTimeProps> = {
         ],
         lapisDateField: 'date',
         width: '100%',
-        height: '700px',
         smoothingWindow: 0,
         granularity: 'month',
         pageSize: 10,
@@ -237,5 +239,13 @@ export const TwoDatasetsWithNonOverlappingDates: StoryObj<NumberSequencesOverTim
                 },
             ],
         },
+    },
+};
+
+export const WithFixedHeight: StoryObj<NumberSequencesOverTimeProps> = {
+    ...Template,
+    args: {
+        ...Template.args,
+        height: '700px',
     },
 };

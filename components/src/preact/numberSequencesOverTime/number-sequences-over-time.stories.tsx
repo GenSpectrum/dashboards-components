@@ -24,6 +24,9 @@ export default {
             control: { type: 'check' },
         },
         pageSize: { control: 'object' },
+        height: {
+            control: 'text',
+        },
     },
 };
 
@@ -40,7 +43,6 @@ const Template: StoryObj<NumberSequencesOverTimeProps> = {
         ],
         lapisDateField: 'date',
         width: '100%',
-        height: '700px',
         smoothingWindow: 0,
         granularity: 'month',
         pageSize: 10,

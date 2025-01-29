@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 
 export type Size = {
     width: string;
-    height: string;
+    height?: string;
 };
 
 export interface ResizeContainerProps {

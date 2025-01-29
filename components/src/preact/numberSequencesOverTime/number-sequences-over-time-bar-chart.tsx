@@ -10,11 +10,16 @@ import { getYAxisScale, type ScaleType } from '../shared/charts/getYAxisScale';
 interface NumberSequencesOverBarChartProps {
     data: NumberOfSequencesDatasets;
     yAxisScaleType: ScaleType;
+    maintainAspectRatio: boolean;
 }
 
 Chart.register(...registerables);
 
-export const NumberSequencesOverTimeBarChart = ({ data, yAxisScaleType }: NumberSequencesOverBarChartProps) => {
+export const NumberSequencesOverTimeBarChart = ({
+    data,
+    yAxisScaleType,
+    maintainAspectRatio,
+}: NumberSequencesOverBarChartProps) => {
     const config: ChartConfiguration = useMemo(
         () => ({
             type: 'bar',
@@ -22,7 +27,7 @@ export const NumberSequencesOverTimeBarChart = ({ data, yAxisScaleType }: Number
                 datasets: getDatasets(data),
             },
             options: {
-                maintainAspectRatio: false,
+                maintainAspectRatio,
                 animation: false,
                 scales: {
                     y: {

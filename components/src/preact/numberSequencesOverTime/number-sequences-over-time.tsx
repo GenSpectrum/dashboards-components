@@ -33,7 +33,7 @@ export type NumberSequencesOverTimeView = z.infer<typeof numberSequencesOverTime
 
 const numberSequencesOverTimePropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     lapisFilters: z.array(namedLapisFilterSchema).min(1),
     lapisDateField: z.string().min(1),
     views: z.array(numberSequencesOverTimeViewSchema),
@@ -89,17 +89,31 @@ interface NumberSequencesOverTimeTabsProps {
 const NumberSequencesOverTimeTabs = ({ data, originalComponentProps }: NumberSequencesOverTimeTabsProps) => {
     const [yAxisScaleType, setYAxisScaleType] = useState<ScaleType>('linear');
 
+    const maintainAspectRatio = originalComponentProps.height === undefined || originalComponentProps.height === '';
+
     const getTab = (view: NumberSequencesOverTimeView) => {
         switch (view) {
             case 'bar':
                 return {
                     title: 'Bar',
-                    content: <NumberSequencesOverTimeBarChart data={data} yAxisScaleType={yAxisScaleType} />,
+                    content: (
+                        <NumberSequencesOverTimeBarChart
+                            data={data}
+                            yAxisScaleType={yAxisScaleType}
+                            maintainAspectRatio={maintainAspectRatio}
+                        />
+                    ),
                 };
             case 'line':
                 return {
                     title: 'Line',
-                    content: <NumberSequencesOverTimeLineChart data={data} yAxisScaleType={yAxisScaleType} />,
+                    content: (
+                        <NumberSequencesOverTimeLineChart
+                            data={data}
+                            yAxisScaleType={yAxisScaleType}
+                            maintainAspectRatio={maintainAspectRatio}
+                        />
+                    ),
                 };
             case 'table':
                 return {
