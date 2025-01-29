@@ -44,7 +44,7 @@ const meta: Meta<Required<MutationsOverTimeProps>> = {
         sequenceType: 'nucleotide',
         views: ['grid'],
         width: '100%',
-        height: '700px',
+        height: '1200px',
         granularity: 'month',
         lapisDateField: 'date',
     },

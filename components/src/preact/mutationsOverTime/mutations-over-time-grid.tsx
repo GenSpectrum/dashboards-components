@@ -1,5 +1,5 @@
 import { Fragment, type FunctionComponent } from 'preact';
-import { useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { type MutationOverTimeDataMap } from './MutationOverTimeData';
 import { type MutationOverTimeMutationValue } from '../../query/queryMutationsOverTime';
@@ -8,6 +8,8 @@ import { type Temporal, type TemporalClass, toTemporalClass, YearMonthDayClass }
 import { type ColorScale, getColorWithingScale, getTextColorForScale } from '../components/color-scale-selector';
 import Tooltip, { type TooltipPosition } from '../components/tooltip';
 import { formatProportion } from '../shared/table/formatProportion';
+import { Grid } from 'gridjs';
+import { TData } from 'gridjs/dist/src/types';
 
 export interface MutationsOverTimeGridProps {
     data: MutationOverTimeDataMap;
@@ -23,6 +25,8 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
     colorScale,
     maxNumberOfGridRows,
 }) => {
+    const [grid, setGrid] = useState<Grid | null>(null);
+
     const currentMaxNumberOfGridRows = maxNumberOfGridRows ?? MAX_NUMBER_OF_GRID_ROWS;
     const allMutations = data.getFirstAxisKeys();
     const shownMutations = allMutations.slice(0, currentMaxNumberOfGridRows);
@@ -30,6 +34,98 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
     const dates = data.getSecondAxisKeys();
 
     const gridRef = useRef<HTMLDivElement>(null);
+    const tableRef = useRef<HTMLDivElement>(null);
+
+    const getData = useCallback<() => TData>(() => {
+        return shownMutations.map((mutation, rowIndex) => {
+            return [
+                mutation.code,
+                ...dates.map((date, columnIndex) => {
+                    const value = data.get(mutation, date) ?? null;
+                    const tooltipPosition = getTooltipPosition(
+                        rowIndex,
+                        shownMutations.length,
+                        columnIndex,
+                        dates.length,
+                    );
+                    return (
+                        <div
+                            style={{ gridRowStart: rowIndex + 1, gridColumnStart: columnIndex + 2 }}
+                            key={`${mutation.toString()}-${date.toString()}`}
+                        >
+                            <ProportionCell
+                                value={value}
+                                date={date}
+                                mutation={mutation}
+                                tooltipPosition={tooltipPosition}
+                                colorScale={colorScale}
+                            />
+                        </div>
+                    );
+                }),
+            ];
+        });
+    }, []);
+
+    useEffect(() => {
+        console.log('useEffect');
+
+        if (tableRef.current === null) {
+            return;
+        }
+
+        const grid = new Grid().render(tableRef.current);
+        setGrid(grid);
+
+        return () => {
+            console.log('destroying');
+            grid.destroy();
+            setGrid(null);
+        };
+    }, [tableRef]);
+
+    useEffect(() => {
+        console.log('updateConfig');
+
+        grid?.updateConfig({
+            columns: [
+                {
+                    id: 'mutation',
+                    name: 'mutation',
+                    minWidth: '10%',
+                },
+                ...dates.map((date) => ({
+                    id: date.dateString,
+                    name: date.dateString,
+                })),
+            ],
+            data: getData,
+            // style: {
+            //     table: {
+            //         fontSize: '12px',
+            //     },
+            //     th: {
+            //         padding: '4px',
+            //         textAlign: 'center',
+            //     },
+            //     td: {
+            //         'border-style': 'none',
+            //         textAlign: 'center',
+            //         padding: '8px',
+            //     },
+            //     footer: {
+            //         fontSize: '12px',
+            //     },
+            // },
+            className: {
+                container: 'w-full',
+                table: 'w-full text-center',
+                td: 'border-none p-0',
+            },
+            pagination: { limit: 5 },
+        });
+        grid?.forceRender();
+    });
 
     return (
         <>
@@ -86,6 +182,7 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
                     );
                 })}
             </div>
+            <div ref={tableRef} />
         </>
     );
 };

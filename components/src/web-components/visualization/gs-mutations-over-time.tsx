@@ -3,7 +3,7 @@ import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 import { MutationsOverTime, type MutationsOverTimeProps } from '../../preact/mutationsOverTime/mutations-over-time';
 import type { Equals, Expect } from '../../utils/typeAssertions';
-import { PreactLitAdapterWithGridJsStyles } from '../PreactLitAdapterWithGridJsStyles';
+import { PreactLitAdapter } from '../PreactLitAdapter';
 
 /**
  * ## Context
@@ -31,7 +31,7 @@ import { PreactLitAdapterWithGridJsStyles } from '../PreactLitAdapterWithGridJsS
  * If there are more, the component will only show 100 mutations and notify the user.
  */
 @customElement('gs-mutations-over-time')
-export class MutationsOverTimeComponent extends PreactLitAdapterWithGridJsStyles {
+export class MutationsOverTimeComponent extends PreactLitAdapter {
     /**
      * LAPIS filter to select the displayed data. If not provided, all data is displayed.
      */

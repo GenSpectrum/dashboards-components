@@ -4,6 +4,7 @@ import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import { Mutations, type MutationsProps } from '../../preact/mutations/mutations';
 import type { Equals, Expect } from '../../utils/typeAssertions';
 import { PreactLitAdapterWithGridJsStyles } from '../PreactLitAdapterWithGridJsStyles';
+import { PreactLitAdapter } from '../PreactLitAdapter';
 
 /**
  * ## Context
