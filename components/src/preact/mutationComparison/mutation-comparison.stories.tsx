@@ -112,7 +112,6 @@ export const TwoVariants: StoryObj<MutationComparisonProps> = {
         sequenceType: 'nucleotide',
         views: ['table', 'venn'],
         width: '100%',
-        height: '700px',
         pageSize: 10,
     },
 };

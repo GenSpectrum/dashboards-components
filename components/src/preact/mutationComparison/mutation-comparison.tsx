@@ -21,6 +21,7 @@ import { ProportionSelectorDropdown } from '../components/proportion-selector-dr
 import { ResizeContainer } from '../components/resize-container';
 import { type DisplayedSegment, SegmentSelector, useDisplayedSegments } from '../components/segment-selector';
 import Tabs from '../components/tabs';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 import { useQuery } from '../useQuery';
 
 export const mutationComparisonViewSchema = z.union([z.literal(views.table), z.literal(views.venn)]);
@@ -28,7 +29,7 @@ export type MutationComparisonView = z.infer<typeof mutationComparisonViewSchema
 
 const mutationComparisonPropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     lapisFilters: z.array(namedLapisFilterSchema).min(1),
     sequenceType: sequenceTypeSchema,
     views: z.array(mutationComparisonViewSchema),
@@ -91,6 +92,8 @@ const MutationComparisonTabs: FunctionComponent<MutationComparisonTabsProps> = (
         [data, displayedSegments, displayedMutationTypes],
     );
 
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
+
     const getTab = (view: MutationComparisonView) => {
         switch (view) {
             case 'table':
@@ -111,6 +114,7 @@ const MutationComparisonTabs: FunctionComponent<MutationComparisonTabsProps> = (
                         <MutationComparisonVenn
                             data={{ content: filteredData }}
                             proportionInterval={proportionInterval}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
