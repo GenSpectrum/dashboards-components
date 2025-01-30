@@ -65,7 +65,7 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
                 }),
             ];
         });
-    }, []);
+    }, [shownMutations, dates, data, colorScale]);
 
     useEffect(() => {
         console.log('useEffect');
@@ -85,7 +85,7 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
     }, [tableRef]);
 
     useEffect(() => {
-        console.log('updateConfig');
+        console.log('updateConfig', grid);
 
         grid?.updateConfig({
             columns: [
@@ -122,13 +122,14 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
                 table: 'w-full text-center',
                 td: 'border-none p-0',
             },
-            pagination: { limit: 5 },
+            pagination: { limit: 1000 },
         });
         grid?.forceRender();
     });
 
     return (
         <>
+            <div ref={tableRef} />
             {allMutations.length > currentMaxNumberOfGridRows && (
                 <div className='pl-2'>
                     Showing {currentMaxNumberOfGridRows} of {allMutations.length} mutations. You can narrow the filter
@@ -138,51 +139,50 @@ const MutationsOverTimeGrid: FunctionComponent<MutationsOverTimeGridProps> = ({
             {allMutations.length === 0 && (
                 <div className={'flex justify-center'}>No data available for your filters.</div>
             )}
-            <div
-                ref={gridRef}
-                style={{
-                    display: 'grid',
-                    gridTemplateRows: `repeat(${shownMutations.length}, 24px)`,
-                    gridTemplateColumns: `${MUTATION_CELL_WIDTH_REM}rem repeat(${dates.length}, minmax(0.05rem, 1fr))`,
-                }}
-            >
-                {shownMutations.map((mutation, rowIndex) => {
-                    return (
-                        <Fragment key={`fragment-${mutation.toString()}`}>
-                            <div
-                                key={`mutation-${mutation.toString()}`}
-                                style={{ gridRowStart: rowIndex + 1, gridColumnStart: 1 }}
-                            >
-                                <MutationCell mutation={mutation} />
-                            </div>
-                            {dates.map((date, columnIndex) => {
-                                const value = data.get(mutation, date) ?? null;
-                                const tooltipPosition = getTooltipPosition(
-                                    rowIndex,
-                                    shownMutations.length,
-                                    columnIndex,
-                                    dates.length,
-                                );
-                                return (
-                                    <div
-                                        style={{ gridRowStart: rowIndex + 1, gridColumnStart: columnIndex + 2 }}
-                                        key={`${mutation.toString()}-${date.toString()}`}
-                                    >
-                                        <ProportionCell
-                                            value={value}
-                                            date={date}
-                                            mutation={mutation}
-                                            tooltipPosition={tooltipPosition}
-                                            colorScale={colorScale}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </Fragment>
-                    );
-                })}
-            </div>
-            <div ref={tableRef} />
+            {/*<div*/}
+            {/*    ref={gridRef}*/}
+            {/*    style={{*/}
+            {/*        display: 'grid',*/}
+            {/*        gridTemplateRows: `repeat(${shownMutations.length}, 24px)`,*/}
+            {/*        gridTemplateColumns: `${MUTATION_CELL_WIDTH_REM}rem repeat(${dates.length}, minmax(0.05rem, 1fr))`,*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    {shownMutations.map((mutation, rowIndex) => {*/}
+            {/*        return (*/}
+            {/*            <Fragment key={`fragment-${mutation.toString()}`}>*/}
+            {/*                <div*/}
+            {/*                    key={`mutation-${mutation.toString()}`}*/}
+            {/*                    style={{ gridRowStart: rowIndex + 1, gridColumnStart: 1 }}*/}
+            {/*                >*/}
+            {/*                    <MutationCell mutation={mutation} />*/}
+            {/*                </div>*/}
+            {/*                {dates.map((date, columnIndex) => {*/}
+            {/*                    const value = data.get(mutation, date) ?? null;*/}
+            {/*                    const tooltipPosition = getTooltipPosition(*/}
+            {/*                        rowIndex,*/}
+            {/*                        shownMutations.length,*/}
+            {/*                        columnIndex,*/}
+            {/*                        dates.length,*/}
+            {/*                    );*/}
+            {/*                    return (*/}
+            {/*                        <div*/}
+            {/*                            style={{ gridRowStart: rowIndex + 1, gridColumnStart: columnIndex + 2 }}*/}
+            {/*                            key={`${mutation.toString()}-${date.toString()}`}*/}
+            {/*                        >*/}
+            {/*                            <ProportionCell*/}
+            {/*                                value={value}*/}
+            {/*                                date={date}*/}
+            {/*                                mutation={mutation}*/}
+            {/*                                tooltipPosition={tooltipPosition}*/}
+            {/*                                colorScale={colorScale}*/}
+            {/*                            />*/}
+            {/*                        </div>*/}
+            {/*                    );*/}
+            {/*                })}*/}
+            {/*            </Fragment>*/}
+            {/*        );*/}
+            {/*    })}*/}
+            {/*</div>*/}
         </>
     );
 };
