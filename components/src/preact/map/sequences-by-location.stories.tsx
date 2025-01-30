@@ -13,6 +13,21 @@ import './leafletStyleModifications.css';
 const meta: Meta<SequencesByLocationProps> = {
     title: 'Visualization/SequencesByLocation',
     component: SequencesByLocation,
+    argTypes: {
+        lapisFilter: { control: 'object' },
+        lapisLocationField: { control: { type: 'text' } },
+        enableMapNavigation: { control: { type: 'boolean' } },
+        width: { control: { type: 'text' } },
+        height: { control: { type: 'text' } },
+        views: {
+            options: ['map', 'table'],
+            control: { type: 'check' },
+        },
+        zoom: { control: { type: 'number' } },
+        offsetX: { control: { type: 'number' } },
+        offsetY: { control: { type: 'number' } },
+        pageSize: { control: 'object' },
+    },
 };
 
 export default meta;
@@ -51,7 +66,6 @@ export const Default: StoryObj<SequencesByLocationProps> = {
         },
         enableMapNavigation: false,
         width: '1100px',
-        height: '800px',
         views: ['map', 'table'],
         zoom: 2,
         offsetX: 0,

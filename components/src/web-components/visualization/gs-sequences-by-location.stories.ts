@@ -86,7 +86,6 @@ const Template: StoryObj<SequencesByLocationProps> = {
     args: {
         enableMapNavigation: false,
         width: '1100px',
-        height: '700px',
         views: ['map', 'table'],
         pageSize: 10,
     },
@@ -222,7 +221,6 @@ export const GermanyTableOnly: StoryObj<SequencesByLocationProps> = {
         lapisFilter: { dateFrom: '2022-01-01', dateTo: '2022-04-01', country: 'Germany' },
         lapisLocationField: 'division',
         width: '100%',
-        height: '700px',
         views: ['table'],
         pageSize: 10,
     },
@@ -247,5 +245,13 @@ export const GermanyTableOnly: StoryObj<SequencesByLocationProps> = {
                 },
             ],
         },
+    },
+};
+
+export const WithFixedHeight: StoryObj<SequencesByLocationProps> = {
+    ...WorldMap,
+    args: {
+        ...WorldMap.args,
+        height: '700px',
     },
 };
