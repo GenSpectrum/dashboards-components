@@ -16,9 +16,7 @@ const codeExample = String.raw`
 <gs-date-range-selector
     dateRangeOptions='[{ "label": "Year 2021", "dateFrom": "2021-01-01", "dateTo": "2021-12-31" }]'
     earliestDate="1970-01-01"
-    initialValue="Year 2021"
-    initialDateFrom="2020-01-01"
-    initialDateTo="2021-01-01"
+    valule="Year 2021"
     width="100%"
     lapisDateField="myDateColumn"
 ></gs-date-range-selector>`;
@@ -40,11 +38,10 @@ const meta: Meta<Required<DateRangeSelectorProps>> = {
         },
     }),
     argTypes: {
-        initialValue: {
+        value: {
             control: {
-                type: 'select',
+                type: 'object',
             },
-            options: [dateRangeOptionPresets.lastMonth.label, dateRangeOptionPresets.allTimes.label, 'CustomDateRange'],
         },
         lapisDateField: { control: { type: 'text' } },
         dateRangeOptions: {
@@ -71,11 +68,9 @@ const meta: Meta<Required<DateRangeSelectorProps>> = {
             customDateRange,
         ],
         earliestDate: '1970-01-01',
-        initialValue: dateRangeOptionPresets.lastMonth.label,
+        value: dateRangeOptionPresets.lastMonth.label,
         lapisDateField: 'aDateColumn',
         width: '100%',
-        initialDateFrom: undefined,
-        initialDateTo: undefined,
     },
     tags: ['autodocs'],
 };
@@ -89,9 +84,7 @@ export const Default: StoryObj<Required<DateRangeSelectorProps>> = {
                 <gs-date-range-selector
                     .dateRangeOptions=${args.dateRangeOptions}
                     .earliestDate=${args.earliestDate}
-                    .initialValue=${args.initialValue}
-                    .initialDateFrom=${args.initialDateFrom}
-                    .initialDateTo=${args.initialDateTo}
+                    .value=${args.value}
                     .width=${args.width}
                     .lapisDateField=${args.lapisDateField}
                 ></gs-date-range-selector>

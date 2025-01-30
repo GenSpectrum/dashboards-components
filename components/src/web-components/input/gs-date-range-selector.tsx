@@ -46,15 +46,18 @@ import { PreactLitAdapter } from '../PreactLitAdapter';
  * Contains the selected dateRangeOption or when users select custom values it contains the selected dates.
  *
  * Use this event, when you want to control this component in your JS application.
+ * You can supply the `detail` of this event to the `value` attribute of this component.
  */
 @customElement('gs-date-range-selector')
 export class DateRangeSelectorComponent extends PreactLitAdapter {
     /**
      * An array of date range options that the select field should provide.
-     * The `label` will be shown to the user, and it will be available as `initialValue`.
+     * The `label` will be shown to the user, and it will be available as `value`.
      * The dates must be in the format `YYYY-MM-DD`.
      *
      * If dateFrom or dateTo is not set, the component will default to the `earliestDate` or the current date.
+     *
+     * We provide some options in `dateRangeOptionPresets` for convenience.
      */
     @property({ type: Array })
     dateRangeOptions: { label: string; dateFrom?: string; dateTo?: string }[] = [];
@@ -66,33 +69,17 @@ export class DateRangeSelectorComponent extends PreactLitAdapter {
     earliestDate: string = '1900-01-01';
 
     /**
-     * The initial value to use for this date range selector.
-     * Must be a valid label from the `dateRangeOptions`.
+     * The value to use for this date range selector.
+     * - If it is a string, then it must be a valid label from the `dateRangeOptions`.
+     * - If it is an object, then it accepts dates in the format `YYYY-MM-DD` for the keys `dateFrom` and `dateTo`.
+     *   Keys that are not set will default to the `earliestDate` or the current date respectively.
+     * - If the attribute is not set, the component will default to the range `earliestDate` until today.
      *
-     * If the value is not set, the component will default to the range `earliestDate` until today.
-     *
-     * It will be overwritten if `initialDateFrom` or `initialDateTo` is set.
-     *
-     * We provide some options in `dateRangeOptionPresets` for convenience.
+     * The `detail` of the `gs-date-range-option-changed` event can be used for this attribute,
+     * if you want to control this component in your JS application.
      */
-    @property()
-    initialValue: string | undefined = undefined;
-
-    /**
-     * A date string in the format `YYYY-MM-DD`.
-     * If set, the date range selector will be initialized with the given date (overwriting `initialValue` to `custom`).
-     * If `initialDateTo` is set, but this is unset, it will default to `earliestDate`.
-     */
-    @property()
-    initialDateFrom: string | undefined = undefined;
-
-    /**
-     * A date string in the format `YYYY-MM-DD`.
-     * If set, the date range selector will be initialized with the given date (overwriting `initialValue` to `custom`).
-     * If `initialDateFrom` is set, but this is unset, it will default to the current date.
-     */
-    @property()
-    initialDateTo: string | undefined = undefined;
+    @property({ type: Object })
+    value: string | { dateFrom?: string; dateTo?: string } | undefined = undefined;
 
     /**
      * The width of the component.
@@ -113,9 +100,7 @@ export class DateRangeSelectorComponent extends PreactLitAdapter {
             <DateRangeSelector
                 dateRangeOptions={this.dateRangeOptions}
                 earliestDate={this.earliestDate}
-                initialValue={this.initialValue}
-                initialDateFrom={this.initialDateFrom}
-                initialDateTo={this.initialDateTo}
+                value={this.value}
                 lapisDateField={this.lapisDateField}
                 width={this.width}
             />
@@ -150,15 +135,7 @@ type CustomSelectOptionsMatches = Expect<
 type EarliestDateMatches = Expect<
     Equals<typeof DateRangeSelectorComponent.prototype.earliestDate, DateRangeSelectorProps['earliestDate']>
 >;
-type InitialValueMatches = Expect<
-    Equals<typeof DateRangeSelectorComponent.prototype.initialValue, DateRangeSelectorProps['initialValue']>
->;
-type InitialDateFromMatches = Expect<
-    Equals<typeof DateRangeSelectorComponent.prototype.initialDateFrom, DateRangeSelectorProps['initialDateFrom']>
->;
-type InitialDateToMatches = Expect<
-    Equals<typeof DateRangeSelectorComponent.prototype.initialDateTo, DateRangeSelectorProps['initialDateTo']>
->;
+type ValueMatches = Expect<Equals<typeof DateRangeSelectorComponent.prototype.value, DateRangeSelectorProps['value']>>;
 type WidthMatches = Expect<Equals<typeof DateRangeSelectorComponent.prototype.width, DateRangeSelectorProps['width']>>;
 type DateColumnMatches = Expect<
     Equals<typeof DateRangeSelectorComponent.prototype.lapisDateField, DateRangeSelectorProps['lapisDateField']>

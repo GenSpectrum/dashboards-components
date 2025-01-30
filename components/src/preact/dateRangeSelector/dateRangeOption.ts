@@ -22,7 +22,17 @@ export const dateRangeOptionSchema = z.object({
 
 export type DateRangeOption = z.infer<typeof dateRangeOptionSchema>;
 
-export type DateRangeSelectOption = string | { dateFrom: string; dateTo: string };
+export const dateRangeValueSchema = z.union([
+    z.string(),
+    z.object({
+        dateFrom: z.string().date().optional(),
+        dateTo: z.string().date().optional(),
+    }),
+]);
+
+export type DateRangeValue = z.infer<typeof dateRangeValueSchema>;
+
+export type DateRangeSelectOption = Required<DateRangeValue>;
 
 export class DateRangeOptionChangedEvent extends CustomEvent<DateRangeSelectOption> {
     constructor(detail: DateRangeSelectOption) {

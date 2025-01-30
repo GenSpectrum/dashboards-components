@@ -1,11 +1,9 @@
-import { type DateRangeOption } from './dateRangeOption';
+import { type DateRangeOption, type DateRangeValue } from './dateRangeOption';
 import { getDatesForSelectorValue, getSelectableOptions } from './selectableOptions';
 import { UserFacingError } from '../components/error-display';
 
 export function computeInitialValues(
-    initialValue: string | undefined,
-    initialDateFrom: string | undefined,
-    initialDateTo: string | undefined,
+    value: DateRangeValue | undefined,
     earliestDate: string,
     dateRangeOptions: DateRangeOption[],
 ): {
@@ -13,20 +11,26 @@ export function computeInitialValues(
     initialSelectedDateFrom: Date;
     initialSelectedDateTo: Date;
 } {
-    if (isUndefinedOrEmpty(initialDateFrom) && isUndefinedOrEmpty(initialDateTo)) {
-        const selectableOptions = getSelectableOptions(dateRangeOptions);
-        const initialSelectedDateRange = selectableOptions.find((option) => option.value === initialValue)?.value;
+    if (value === undefined) {
+        const { dateFrom, dateTo } = getDatesForSelectorValue(undefined, dateRangeOptions, earliestDate);
+        return {
+            initialSelectedDateRange: undefined,
+            initialSelectedDateFrom: dateFrom,
+            initialSelectedDateTo: dateTo,
+        };
+    }
 
-        if (initialValue !== undefined && initialSelectedDateRange === undefined) {
+    if (typeof value === 'string') {
+        const selectableOptions = getSelectableOptions(dateRangeOptions);
+        const initialSelectedDateRange = selectableOptions.find((option) => option.value === value)?.value;
+
+        if (initialSelectedDateRange === undefined) {
             if (selectableOptions.length === 0) {
-                throw new UserFacingError(
-                    'Invalid initialValue',
-                    'There are no selectable options, but initialValue is set.',
-                );
+                throw new UserFacingError('Invalid value', 'There are no selectable options, but value is set.');
             }
             throw new UserFacingError(
-                'Invalid initialValue',
-                `Invalid initialValue "${initialValue}", It must be one of ${selectableOptions.map((option) => `'${option.value}'`).join(', ')}`,
+                'Invalid value',
+                `Invalid value "${value}", It must be one of ${selectableOptions.map((option) => `'${option.value}'`).join(', ')}`,
             );
         }
 
@@ -39,21 +43,21 @@ export function computeInitialValues(
         };
     }
 
-    const initialSelectedDateFrom = isUndefinedOrEmpty(initialDateFrom)
-        ? new Date(earliestDate)
-        : new Date(initialDateFrom);
-    let initialSelectedDateTo = isUndefinedOrEmpty(initialDateTo) ? new Date() : new Date(initialDateTo);
+    const { dateFrom, dateTo } = value;
+
+    const initialSelectedDateFrom = isUndefinedOrEmpty(dateFrom) ? new Date(earliestDate) : new Date(dateFrom);
+    let initialSelectedDateTo = isUndefinedOrEmpty(dateTo) ? new Date() : new Date(dateTo);
 
     if (isNaN(initialSelectedDateFrom.getTime())) {
         throw new UserFacingError(
-            'Invalid initialDateFrom',
-            `Invalid initialDateFrom "${initialDateFrom}", It must be of the format YYYY-MM-DD`,
+            'Invalid value.dateFrom',
+            `Invalid value.dateFrom "${dateFrom}", It must be of the format YYYY-MM-DD`,
         );
     }
     if (isNaN(initialSelectedDateTo.getTime())) {
         throw new UserFacingError(
-            'Invalid initialDateTo',
-            `Invalid initialDateTo "${initialDateTo}", It must be of the format YYYY-MM-DD`,
+            'Invalid value.dateTo',
+            `Invalid value.dateTo "${dateTo}", It must be of the format YYYY-MM-DD`,
         );
     }
 

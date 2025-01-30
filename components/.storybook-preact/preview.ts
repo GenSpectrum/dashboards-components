@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/preact';
+import { clearAllMocks } from '@storybook/test';
 
 import '../src/styles/tailwind.css';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -15,6 +16,9 @@ const preview: Preview = {
         actions: { handles: [GS_ERROR_EVENT_TYPE] },
     },
     decorators: [withActions],
+    beforeEach: () => {
+        clearAllMocks();
+    },
 };
 
 export default preview;
