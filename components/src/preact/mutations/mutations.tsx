@@ -41,7 +41,7 @@ const mutationsPropsSchema = z.object({
     views: mutationsViewSchema.array(),
     pageSize: z.union([z.boolean(), z.number()]),
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
 });
 export type MutationsProps = z.infer<typeof mutationsPropsSchema>;
 

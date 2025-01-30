@@ -54,7 +54,6 @@ const meta: Meta<Required<MutationsProps>> = {
         sequenceType: 'nucleotide',
         views: ['grid', 'table', 'insertions'],
         width: '100%',
-        height: '700px',
         pageSize: 10,
     },
     parameters: withComponentDocs({
@@ -187,5 +186,13 @@ export const OnInsertionsTab: StoryObj<Required<MutationsProps>> = {
         await waitFor(() => expect(canvas.getByRole('button', { name: 'Insertions' })).toBeInTheDocument());
 
         await fireEvent.click(canvas.getByRole('button', { name: 'Insertions' }));
+    },
+};
+
+export const WithFixedHeight: StoryObj<Required<MutationsProps>> = {
+    ...Default,
+    args: {
+        ...Default.args,
+        height: '700px',
     },
 };
