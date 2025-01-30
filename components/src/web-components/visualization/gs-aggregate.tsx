@@ -75,7 +75,7 @@ export class AggregateComponent extends PreactLitAdapterWithGridJsStyles {
      * Visit https://genspectrum.github.io/dashboard-components/?path=/docs/components-size-of-components--docs for more information.
      */
     @property({ type: String })
-    height: string = '700px';
+    height: string | undefined = undefined;
 
     /**
      * The field by which the table is initially sorted.

@@ -55,7 +55,6 @@ export const Default: StoryObj<AggregateProps> = {
             country: 'USA',
         },
         width: '100%',
-        height: '700px',
         initialSortField: 'count',
         initialSortDirection: 'descending',
         pageSize: 10,

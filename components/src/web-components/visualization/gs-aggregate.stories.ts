@@ -54,7 +54,7 @@ const meta: Meta<Required<AggregateProps>> = {
 
 export default meta;
 
-export const Table: StoryObj<Required<AggregateProps>> = {
+export const Default: StoryObj<Required<AggregateProps>> = {
     render: (args) => html`
         <gs-app lapis="${LAPIS_URL}">
             <gs-aggregate
@@ -97,7 +97,6 @@ export const Table: StoryObj<Required<AggregateProps>> = {
             country: 'USA',
         },
         width: '100%',
-        height: '700px',
         initialSortField: 'count',
         initialSortDirection: 'descending',
         pageSize: 10,
@@ -105,10 +104,52 @@ export const Table: StoryObj<Required<AggregateProps>> = {
     },
 };
 
-export const BarChartWithOneField: StoryObj<Required<AggregateProps>> = {
-    ...Table,
+export const WithFixedHeight: StoryObj<Required<AggregateProps>> = {
+    render: (args) => html`
+        <gs-app lapis="${LAPIS_URL}">
+            <gs-aggregate
+                .fields=${args.fields}
+                .lapisFilter=${args.lapisFilter}
+                .views=${args.views}
+                .width=${args.width}
+                .height=${args.height}
+                .initialSortField=${args.initialSortField}
+                .initialSortDirection=${args.initialSortDirection}
+                .pageSize=${args.pageSize}
+                .maxNumberOfBars=${args.maxNumberOfBars}
+            ></gs-aggregate>
+        </gs-app>
+    `,
+    parameters: {
+        fetchMock: {
+            mocks: [
+                {
+                    matcher: {
+                        name: 'aggregatedData',
+                        url: AGGREGATED_ENDPOINT,
+                        body: {
+                            fields: ['division', 'host'],
+                            country: 'USA',
+                        },
+                    },
+                    response: {
+                        status: 200,
+                        body: aggregatedData,
+                    },
+                },
+            ],
+        },
+    },
     args: {
-        ...Table.args,
+        ...Default.args,
+        height: '700px',
+    },
+};
+
+export const BarChartWithOneField: StoryObj<Required<AggregateProps>> = {
+    ...Default,
+    args: {
+        ...Default.args,
         fields: ['division'],
         views: ['bar', 'table'],
     },
@@ -135,9 +176,9 @@ export const BarChartWithOneField: StoryObj<Required<AggregateProps>> = {
 };
 
 export const BarChartWithTwoFields: StoryObj<Required<AggregateProps>> = {
-    ...Table,
+    ...Default,
     args: {
-        ...Table.args,
+        ...Default.args,
         fields: ['division', 'nextstrainClade'],
         lapisFilter: {
             country: 'Germany',

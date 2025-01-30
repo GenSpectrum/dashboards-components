@@ -13,6 +13,7 @@ interface AggregateBarChartProps {
     data: AggregateData;
     fields: string[];
     maxNumberOfBars: number;
+    maintainAspectRatio: boolean;
 }
 
 Chart.register(...registerables, BarController);
@@ -23,7 +24,12 @@ type DataPoint = {
     proportion: number;
 };
 
-export const AggregateBarChart: FunctionComponent<AggregateBarChartProps> = ({ data, fields, maxNumberOfBars }) => {
+export const AggregateBarChart: FunctionComponent<AggregateBarChartProps> = ({
+    data,
+    fields,
+    maxNumberOfBars,
+    maintainAspectRatio,
+}) => {
     if (data.length === 0) {
         return <NoDataDisplay />;
     }
@@ -42,10 +48,22 @@ export const AggregateBarChart: FunctionComponent<AggregateBarChartProps> = ({ d
         );
     }
 
-    return <AggregateBarChartInner data={data} fields={fields} maxNumberOfBars={maxNumberOfBars} />;
+    return (
+        <AggregateBarChartInner
+            data={data}
+            fields={fields}
+            maxNumberOfBars={maxNumberOfBars}
+            maintainAspectRatio={maintainAspectRatio}
+        />
+    );
 };
 
-const AggregateBarChartInner: FunctionComponent<AggregateBarChartProps> = ({ data, fields, maxNumberOfBars }) => {
+const AggregateBarChartInner: FunctionComponent<AggregateBarChartProps> = ({
+    data,
+    fields,
+    maxNumberOfBars,
+    maintainAspectRatio,
+}) => {
     const config = useMemo((): ChartConfiguration<'bar', DataPoint[]> => {
         const { datasets, countsOfEachBar } = getDatasets(fields, maxNumberOfBars, data);
 
@@ -55,7 +73,7 @@ const AggregateBarChartInner: FunctionComponent<AggregateBarChartProps> = ({ dat
                 datasets,
             },
             options: {
-                maintainAspectRatio: false,
+                maintainAspectRatio,
                 animation: false,
                 indexAxis: 'y',
                 scales: {
@@ -64,6 +82,9 @@ const AggregateBarChartInner: FunctionComponent<AggregateBarChartProps> = ({ dat
                     },
                     y: {
                         stacked: true,
+                        ticks: {
+                            autoSkip: false,
+                        },
                     },
                 },
                 plugins: {
@@ -92,7 +113,7 @@ const AggregateBarChartInner: FunctionComponent<AggregateBarChartProps> = ({ dat
                 },
             },
         };
-    }, [data, fields, maxNumberOfBars]);
+    }, [data, fields, maintainAspectRatio, maxNumberOfBars]);
 
     return <GsChart configuration={config} />;
 };
