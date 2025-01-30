@@ -45,7 +45,7 @@ const mutationOverTimeSchema = z.object({
     granularity: temporalGranularitySchema,
     lapisDateField: z.string().min(1),
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
 });
 export type MutationsOverTimeProps = z.infer<typeof mutationOverTimeSchema>;
 
