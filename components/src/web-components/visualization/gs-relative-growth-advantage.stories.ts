@@ -81,7 +81,6 @@ export const Default: StoryObj<Required<RelativeGrowthAdvantageProps>> = {
         generationTime: 7,
         views: ['line'],
         width: '100%',
-        height: '700px',
         lapisDateField: 'date',
         yAxisMaxLinear: 1,
         yAxisMaxLogarithmic: 'limitTo1',
@@ -124,5 +123,13 @@ export const Default: StoryObj<Required<RelativeGrowthAdvantageProps>> = {
                 },
             ],
         },
+    },
+};
+
+export const WithFixedHeight: StoryObj<Required<RelativeGrowthAdvantageProps>> = {
+    ...Default,
+    args: {
+        ...Default.args,
+        height: '700px',
     },
 };

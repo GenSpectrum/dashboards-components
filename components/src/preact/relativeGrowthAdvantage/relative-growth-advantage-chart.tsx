@@ -28,11 +28,17 @@ interface RelativeGrowthAdvantageChartProps {
     data: RelativeGrowthAdvantageChartData;
     yAxisScaleType: ScaleType;
     yAxisMaxConfig: YAxisMaxConfig;
+    maintainAspectRatio: boolean;
 }
 
 Chart.register(...registerables, LogitScale);
 
-const RelativeGrowthAdvantageChart = ({ data, yAxisScaleType, yAxisMaxConfig }: RelativeGrowthAdvantageChartProps) => {
+const RelativeGrowthAdvantageChart = ({
+    data,
+    yAxisScaleType,
+    yAxisMaxConfig,
+    maintainAspectRatio,
+}: RelativeGrowthAdvantageChartProps) => {
     const maxY =
         yAxisScaleType !== 'logit'
             ? getYAxisMax(Math.max(...data.proportion), yAxisMaxConfig?.[yAxisScaleType])
@@ -45,9 +51,8 @@ const RelativeGrowthAdvantageChart = ({ data, yAxisScaleType, yAxisMaxConfig }: 
             datasets: datasets(data),
         },
         options: {
-            maintainAspectRatio: false,
+            maintainAspectRatio,
             animation: false,
-
             scales: {
                 y: { ...getYAxisScale(yAxisScaleType), max: maxY },
             },

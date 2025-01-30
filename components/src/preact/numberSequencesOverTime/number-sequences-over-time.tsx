@@ -21,6 +21,7 @@ import { NoDataDisplay } from '../components/no-data-display';
 import { ResizeContainer } from '../components/resize-container';
 import { ScalingSelector } from '../components/scaling-selector';
 import Tabs from '../components/tabs';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 import type { ScaleType } from '../shared/charts/getYAxisScale';
 import { useQuery } from '../useQuery';
 
@@ -89,7 +90,7 @@ interface NumberSequencesOverTimeTabsProps {
 const NumberSequencesOverTimeTabs = ({ data, originalComponentProps }: NumberSequencesOverTimeTabsProps) => {
     const [yAxisScaleType, setYAxisScaleType] = useState<ScaleType>('linear');
 
-    const maintainAspectRatio = originalComponentProps.height === undefined || originalComponentProps.height === '';
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
 
     const getTab = (view: NumberSequencesOverTimeView) => {
         switch (view) {
