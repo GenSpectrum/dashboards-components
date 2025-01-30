@@ -35,7 +35,7 @@ export type PrevalenceOverTimeView = z.infer<typeof prevalenceOverTimeViewSchema
 
 const prevalenceOverTimePropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     numeratorFilters: z.array(namedLapisFilterSchema).min(1),
     denominatorFilter: lapisFilterSchema,
     granularity: temporalGranularitySchema,
@@ -117,6 +117,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
     }, [confidenceIntervalMethods]);
 
     const yAxisMaxConfig = { linear: yAxisMaxLinear, logarithmic: yAxisMaxLogarithmic };
+    const maintainAspectRatio = componentProps.height === undefined || componentProps.height === '';
 
     const getTab = (view: PrevalenceOverTimeView) => {
         switch (view) {
@@ -129,6 +130,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             yAxisScaleType={yAxisScaleType}
                             confidenceIntervalMethod={confidenceIntervalMethod}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
@@ -141,6 +143,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             yAxisScaleType={yAxisScaleType}
                             confidenceIntervalMethod={confidenceIntervalMethod}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
@@ -152,6 +155,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             data={data}
                             yAxisScaleType={yAxisScaleType}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
