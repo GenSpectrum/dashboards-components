@@ -6,7 +6,7 @@ export function AspectRatio({ children, aspectRatio }: PropsWithChildren<{ aspec
     }
 
     return (
-        <div class={`w-full relative pt-[${aspectRatio}%]`}>
+        <div class={`w-full relative`} style={{ paddingTop: `${aspectRatio}%` }}>
             <div className='absolute inset-0'>{children}</div>
         </div>
     );
