@@ -5,7 +5,10 @@ import { Meta } from '@storybook/blocks';
 # Size of components
 
 All visualization and input components can be provided with a width prop (or height, when applicable) to control the size of the component.
-If not provided, the default width or height is used. In most cases, the default is a width of '100%' of its parent container and a predefined height.
+If the width is not provided, the default is used. In most cases, the default is a width of '100%' of its parent container.
+If the height is not set, the component takes up as much space as needed in the vertical direction.
+For table views, this includes showing the complete table.
+For diagrams, a fixed aspect ratio of 2:1 (width/height) is used.
 
 Both width and height can be set using the css units (e.g. 'px', 'em', 'rem', '%', 'vh', 'vw', etc.).
 By using '%', the size of the component can be controlled by the parent component.
