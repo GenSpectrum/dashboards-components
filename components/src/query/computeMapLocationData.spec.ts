@@ -2,7 +2,7 @@ import type { FeatureCollection, GeometryObject } from 'geojson';
 import { describe, expect, test } from 'vitest';
 
 import { computeMapLocationData } from './computeMapLocationData';
-import type { GeoJsonFeatureProperties } from '../preact/map/loadMapSource';
+import type { GeoJsonFeatureProperties } from '../preact/sequencesByLocation/loadMapSource';
 
 const lapisLocationField = 'locationField';
 

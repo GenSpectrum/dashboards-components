@@ -1,6 +1,6 @@
 import { computeMapLocationData } from './computeMapLocationData';
 import { queryAggregateData } from './queryAggregateData';
-import { loadMapSource, type MapSource } from '../preact/map/loadMapSource';
+import { loadMapSource, type MapSource } from '../preact/sequencesByLocation/loadMapSource';
 import type { LapisFilter } from '../types';
 
 export async function querySequencesByLocationData(

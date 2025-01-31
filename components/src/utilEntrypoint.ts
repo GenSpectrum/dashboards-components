@@ -27,7 +27,7 @@ export type {
     RelativeGrowthAdvantageProps,
 } from './preact/relativeGrowthAdvantage/relative-growth-advantage';
 export type { StatisticsProps } from './preact/statistic/statistics';
-export type { MapSource } from './preact/map/loadMapSource';
+export type { MapSource } from './preact/sequencesByLocation/loadMapSource';
 
 export type { ConfidenceIntervalMethod } from './preact/shared/charts/confideceInterval';
 

@@ -1,7 +1,7 @@
 import type { Feature, FeatureCollection, GeometryObject } from 'geojson';
 
 import type { AggregateData } from './queryAggregateData';
-import type { GeoJsonFeatureProperties } from '../preact/map/loadMapSource';
+import type { GeoJsonFeatureProperties } from '../preact/sequencesByLocation/loadMapSource';
 
 export type FeatureData = { proportion: number; count: number };
 

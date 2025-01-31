@@ -5,11 +5,11 @@ import { html } from 'lit';
 import { withComponentDocs } from '../../../.storybook/ComponentDocsBlock';
 import { AGGREGATED_ENDPOINT, LAPIS_URL } from '../../constants';
 import aggregatedData from '../../preact/aggregatedData/__mockData__/aggregated.json';
-import aggregatedGermany from '../../preact/map/__mockData__/aggregatedGermany.json';
-import aggregatedWorld from '../../preact/map/__mockData__/aggregatedWorld.json';
-import mapOfGermany from '../../preact/map/__mockData__/germanyMap.json';
-import worldAtlas from '../../preact/map/__mockData__/worldAtlas.json';
-import { type SequencesByLocationProps } from '../../preact/map/sequences-by-location';
+import aggregatedGermany from '../../preact/sequencesByLocation/__mockData__/aggregatedGermany.json';
+import aggregatedWorld from '../../preact/sequencesByLocation/__mockData__/aggregatedWorld.json';
+import mapOfGermany from '../../preact/sequencesByLocation/__mockData__/germanyMap.json';
+import worldAtlas from '../../preact/sequencesByLocation/__mockData__/worldAtlas.json';
+import { type SequencesByLocationProps } from '../../preact/sequencesByLocation/sequences-by-location';
 import { withinShadowRoot } from '../withinShadowRoot.story';
 
 import './gs-sequences-by-location';

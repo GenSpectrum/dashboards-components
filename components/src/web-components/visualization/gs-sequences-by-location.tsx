@@ -3,8 +3,11 @@ import { unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-import leafletStyleModifications from '../../preact/map/leafletStyleModifications.css?inline';
-import { SequencesByLocation, type SequencesByLocationProps } from '../../preact/map/sequences-by-location';
+import leafletStyleModifications from '../../preact/sequencesByLocation/leafletStyleModifications.css?inline';
+import {
+    SequencesByLocation,
+    type SequencesByLocationProps,
+} from '../../preact/sequencesByLocation/sequences-by-location';
 import type { Equals, Expect } from '../../utils/typeAssertions';
 import { PreactLitAdapterWithGridJsStyles } from '../PreactLitAdapterWithGridJsStyles';
 
