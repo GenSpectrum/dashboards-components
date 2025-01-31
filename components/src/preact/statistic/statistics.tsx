@@ -13,7 +13,7 @@ import { useQuery } from '../useQuery';
 
 const statisticsPropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     numeratorFilter: lapisFilterSchema,
     denominatorFilter: lapisFilterSchema,
 });

@@ -68,7 +68,6 @@ export const Default: StoryObj<StatisticsProps> = {
             division: 'Alabama',
         },
         width: '100%',
-        height: '100%',
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
