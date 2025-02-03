@@ -89,7 +89,6 @@ export const Default: StoryObj<Required<MutationComparisonProps>> = {
         sequenceType: 'nucleotide',
         views: ['table', 'venn'],
         width: '100%',
-        height: '700px',
         pageSize: 10,
     },
     parameters: {
@@ -160,5 +159,13 @@ export const VennDiagram: StoryObj<Required<MutationComparisonProps>> = {
                 ).toBeVisible(),
             );
         });
+    },
+};
+
+export const WithFixedHeight: StoryObj<Required<MutationComparisonProps>> = {
+    ...Default,
+    args: {
+        ...Default.args,
+        height: '700px',
     },
 };

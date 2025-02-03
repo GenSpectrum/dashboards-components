@@ -90,6 +90,5 @@ export const Default: StoryObj<Required<StatisticsProps>> = {
             division: 'Alabama',
         },
         width: '100%',
-        height: '700px',
     },
 };

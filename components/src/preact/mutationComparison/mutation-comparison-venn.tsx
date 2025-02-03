@@ -13,11 +13,13 @@ Chart.register(...registerables, VennDiagramController, ArcSlice);
 export interface MutationComparisonVennProps {
     data: Dataset<MutationData>;
     proportionInterval: ProportionInterval;
+    maintainAspectRatio: boolean;
 }
 
 export const MutationComparisonVenn: FunctionComponent<MutationComparisonVennProps> = ({
     data,
     proportionInterval,
+    maintainAspectRatio,
 }) => {
     const [selectedDatasetIndex, setSelectedDatasetIndex] = useState<null | number>(null);
 
@@ -48,7 +50,7 @@ export const MutationComparisonVenn: FunctionComponent<MutationComparisonVennPro
             type: 'venn',
             data: sets,
             options: {
-                maintainAspectRatio: false,
+                maintainAspectRatio,
                 scales: {
                     x: {
                         ticks: {

@@ -21,6 +21,7 @@ import { useQuery } from '../useQuery';
 import { mapSourceSchema } from './loadMapSource';
 import { lapisFilterSchema, views } from '../../types';
 import Tabs from '../components/tabs';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 
 export const sequencesByLocationViewSchema = z.union([z.literal(views.map), z.literal(views.table)]);
 export type SequencesByLocationMapView = z.infer<typeof sequencesByLocationViewSchema>;
@@ -31,7 +32,7 @@ const sequencesByLocationPropsSchema = z.object({
     mapSource: mapSourceSchema.optional(),
     enableMapNavigation: z.boolean(),
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     views: z.array(sequencesByLocationViewSchema),
     zoom: z.number(),
     offsetX: z.number(),
@@ -87,6 +88,8 @@ const SequencesByLocationMapTabs: FunctionComponent<SequencesByLocationMapTabsPr
     originalComponentProps,
     data,
 }) => {
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
+
     const getTab = (view: SequencesByLocationMapView) => {
         switch (view) {
             case views.map: {
@@ -105,6 +108,7 @@ const SequencesByLocationMapTabs: FunctionComponent<SequencesByLocationMapTabsPr
                             offsetX={originalComponentProps.offsetX}
                             offsetY={originalComponentProps.offsetY}
                             hasTableView={originalComponentProps.views.includes(views.table)}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };

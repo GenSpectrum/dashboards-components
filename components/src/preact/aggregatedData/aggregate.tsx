@@ -15,6 +15,7 @@ import { ResizeContainer } from '../components/resize-container';
 import Tabs from '../components/tabs';
 import { useQuery } from '../useQuery';
 import { AggregateBarChart } from './aggregate-bar-chart';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 
 const aggregateViewSchema = z.union([z.literal(views.table), z.literal(views.bar)]);
 export type AggregateView = z.infer<typeof aggregateViewSchema>;
@@ -27,7 +28,7 @@ const aggregatePropsSchema = z.object({
     initialSortDirection: z.union([z.literal('ascending'), z.literal('descending')]),
     pageSize: z.union([z.boolean(), z.number()]),
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     maxNumberOfBars: z.number(),
 });
 export type AggregateProps = z.infer<typeof aggregatePropsSchema>;
@@ -74,6 +75,8 @@ type AggregatedDataTabsProps = {
 };
 
 const AggregatedDataTabs: FunctionComponent<AggregatedDataTabsProps> = ({ data, originalComponentProps }) => {
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
+
     const getTab = (view: AggregateView) => {
         switch (view) {
             case views.table:
@@ -97,6 +100,7 @@ const AggregatedDataTabs: FunctionComponent<AggregatedDataTabsProps> = ({ data, 
                             data={data}
                             fields={originalComponentProps.fields}
                             maxNumberOfBars={originalComponentProps.maxNumberOfBars}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };

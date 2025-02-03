@@ -3,8 +3,11 @@ import { unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-import leafletStyleModifications from '../../preact/map/leafletStyleModifications.css?inline';
-import { SequencesByLocation, type SequencesByLocationProps } from '../../preact/map/sequences-by-location';
+import leafletStyleModifications from '../../preact/sequencesByLocation/leafletStyleModifications.css?inline';
+import {
+    SequencesByLocation,
+    type SequencesByLocationProps,
+} from '../../preact/sequencesByLocation/sequences-by-location';
 import type { Equals, Expect } from '../../utils/typeAssertions';
 import { PreactLitAdapterWithGridJsStyles } from '../PreactLitAdapterWithGridJsStyles';
 
@@ -148,7 +151,7 @@ export class SequencesByLocationComponent extends PreactLitAdapterWithGridJsStyl
      * Visit https://genspectrum.github.io/dashboard-components/?path=/docs/components-size-of-components--docs for more information.
      */
     @property({ type: String })
-    height: string = '700px';
+    height: string | undefined = undefined;
 
     /**
      A list of tabs with views that this component should provide.

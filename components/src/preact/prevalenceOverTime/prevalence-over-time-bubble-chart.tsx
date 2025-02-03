@@ -15,6 +15,7 @@ interface PrevalenceOverTimeBubbleChartProps {
     data: PrevalenceOverTimeData;
     yAxisScaleType: ScaleType;
     yAxisMaxConfig: YAxisMaxConfig;
+    maintainAspectRatio: boolean;
 }
 
 Chart.register(...registerables, LogitScale);
@@ -23,6 +24,7 @@ const PrevalenceOverTimeBubbleChart = ({
     data,
     yAxisScaleType,
     yAxisMaxConfig,
+    maintainAspectRatio,
 }: PrevalenceOverTimeBubbleChartProps) => {
     const nonNullDateRangeData = data
         .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
@@ -69,7 +71,7 @@ const PrevalenceOverTimeBubbleChart = ({
         },
         options: {
             animation: false,
-            maintainAspectRatio: false,
+            maintainAspectRatio,
             scales: {
                 x: {
                     ticks: {

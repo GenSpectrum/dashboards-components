@@ -72,7 +72,7 @@ export class NumberSequencesOverTimeComponent extends PreactLitAdapterWithGridJs
      * Visit https://genspectrum.github.io/dashboard-components/?path=/docs/components-size-of-components--docs for more information.
      */
     @property({ type: String })
-    height: string = '700px';
+    height: string | undefined = undefined;
 
     /**
      * The granularity of the time axis.

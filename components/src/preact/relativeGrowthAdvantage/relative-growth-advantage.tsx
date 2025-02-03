@@ -18,6 +18,7 @@ import { NoDataDisplay } from '../components/no-data-display';
 import { ResizeContainer } from '../components/resize-container';
 import { ScalingSelector } from '../components/scaling-selector';
 import Tabs from '../components/tabs';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 import { axisMaxSchema } from '../shared/charts/getYAxisMax';
 import { type ScaleType } from '../shared/charts/getYAxisScale';
 import { useQuery } from '../useQuery';
@@ -27,7 +28,7 @@ export type RelativeGrowthAdvantageView = z.infer<typeof relativeGrowthAdvantage
 
 export const relativeGrowthAdvantagePropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     numeratorFilter: lapisFilterSchema,
     denominatorFilter: lapisFilterSchema,
     generationTime: z.number(),
@@ -102,6 +103,8 @@ const RelativeGrowthAdvantageTabs: FunctionComponent<RelativeGrowthAdvantageTabs
     setYAxisScaleType,
     originalComponentProps,
 }) => {
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
+
     const getTab = (view: RelativeGrowthAdvantageView) => {
         switch (view) {
             case 'line':
@@ -119,6 +122,7 @@ const RelativeGrowthAdvantageTabs: FunctionComponent<RelativeGrowthAdvantageTabs
                                 linear: originalComponentProps.yAxisMaxLinear,
                                 logarithmic: originalComponentProps.yAxisMaxLogarithmic,
                             }}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };

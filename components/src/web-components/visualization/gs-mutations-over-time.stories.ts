@@ -44,7 +44,6 @@ const meta: Meta<Required<MutationsOverTimeProps>> = {
         sequenceType: 'nucleotide',
         views: ['grid'],
         width: '100%',
-        height: '700px',
         granularity: 'month',
         lapisDateField: 'date',
     },
@@ -109,5 +108,14 @@ export const HideProportionOnSmallScreen: StoryObj<Required<MutationsOverTimePro
     args: {
         ...ByMonth.args,
         width: '300px',
+    },
+};
+
+// This test uses mock data: defaultMockData.ts (through mutationOverTimeWorker.mock.ts)
+export const WithFixedHeight: StoryObj<Required<MutationsOverTimeProps>> = {
+    ...Template,
+    args: {
+        ...Template,
+        height: '700px',
     },
 };

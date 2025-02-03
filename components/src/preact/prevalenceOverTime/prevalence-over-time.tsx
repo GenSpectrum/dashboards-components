@@ -21,6 +21,7 @@ import { ResizeContainer } from '../components/resize-container';
 import { ScalingSelector } from '../components/scaling-selector';
 import Tabs from '../components/tabs';
 import { type ConfidenceIntervalMethod, confidenceIntervalMethodSchema } from '../shared/charts/confideceInterval';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 import { axisMaxSchema } from '../shared/charts/getYAxisMax';
 import { type ScaleType } from '../shared/charts/getYAxisScale';
 import { useQuery } from '../useQuery';
@@ -35,7 +36,7 @@ export type PrevalenceOverTimeView = z.infer<typeof prevalenceOverTimeViewSchema
 
 const prevalenceOverTimePropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     numeratorFilters: z.array(namedLapisFilterSchema).min(1),
     denominatorFilter: lapisFilterSchema,
     granularity: temporalGranularitySchema,
@@ -117,6 +118,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
     }, [confidenceIntervalMethods]);
 
     const yAxisMaxConfig = { linear: yAxisMaxLinear, logarithmic: yAxisMaxLogarithmic };
+    const maintainAspectRatio = getMaintainAspectRatio(componentProps.height);
 
     const getTab = (view: PrevalenceOverTimeView) => {
         switch (view) {
@@ -129,6 +131,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             yAxisScaleType={yAxisScaleType}
                             confidenceIntervalMethod={confidenceIntervalMethod}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
@@ -141,6 +144,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             yAxisScaleType={yAxisScaleType}
                             confidenceIntervalMethod={confidenceIntervalMethod}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };
@@ -152,6 +156,7 @@ const PrevalenceOverTimeTabs: FunctionComponent<PrevalenceOverTimeTabsProps> = (
                             data={data}
                             yAxisScaleType={yAxisScaleType}
                             yAxisMaxConfig={yAxisMaxConfig}
+                            maintainAspectRatio={maintainAspectRatio}
                         />
                     ),
                 };

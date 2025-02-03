@@ -20,6 +20,7 @@ interface PrevalenceOverTimeLineChartProps {
     yAxisScaleType: ScaleType;
     confidenceIntervalMethod: ConfidenceIntervalMethod;
     yAxisMaxConfig: YAxisMaxConfig;
+    maintainAspectRatio: boolean;
 }
 
 Chart.register(...registerables, LogitScale);
@@ -29,6 +30,7 @@ const PrevalenceOverTimeLineChart = ({
     yAxisScaleType,
     confidenceIntervalMethod,
     yAxisMaxConfig,
+    maintainAspectRatio,
 }: PrevalenceOverTimeLineChartProps) => {
     const nonNullDateRangeData = data
         .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
@@ -59,7 +61,7 @@ const PrevalenceOverTimeLineChart = ({
         },
         options: {
             animation: false,
-            maintainAspectRatio: false,
+            maintainAspectRatio,
             scales: {
                 y: { ...getYAxisScale(yAxisScaleType), max: maxY },
             },

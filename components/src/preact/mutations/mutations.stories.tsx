@@ -55,7 +55,6 @@ export const Default: StoryObj<MutationsProps> = {
         sequenceType: 'nucleotide',
         views: ['grid', 'table', 'insertions'],
         width: '100%',
-        height: '700px',
         pageSize: 10,
     },
     parameters: {

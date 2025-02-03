@@ -5,11 +5,11 @@ import { html } from 'lit';
 import { withComponentDocs } from '../../../.storybook/ComponentDocsBlock';
 import { AGGREGATED_ENDPOINT, LAPIS_URL } from '../../constants';
 import aggregatedData from '../../preact/aggregatedData/__mockData__/aggregated.json';
-import aggregatedGermany from '../../preact/map/__mockData__/aggregatedGermany.json';
-import aggregatedWorld from '../../preact/map/__mockData__/aggregatedWorld.json';
-import mapOfGermany from '../../preact/map/__mockData__/germanyMap.json';
-import worldAtlas from '../../preact/map/__mockData__/worldAtlas.json';
-import { type SequencesByLocationProps } from '../../preact/map/sequences-by-location';
+import aggregatedGermany from '../../preact/sequencesByLocation/__mockData__/aggregatedGermany.json';
+import aggregatedWorld from '../../preact/sequencesByLocation/__mockData__/aggregatedWorld.json';
+import mapOfGermany from '../../preact/sequencesByLocation/__mockData__/germanyMap.json';
+import worldAtlas from '../../preact/sequencesByLocation/__mockData__/worldAtlas.json';
+import { type SequencesByLocationProps } from '../../preact/sequencesByLocation/sequences-by-location';
 import { withinShadowRoot } from '../withinShadowRoot.story';
 
 import './gs-sequences-by-location';
@@ -86,7 +86,6 @@ const Template: StoryObj<SequencesByLocationProps> = {
     args: {
         enableMapNavigation: false,
         width: '1100px',
-        height: '700px',
         views: ['map', 'table'],
         pageSize: 10,
     },
@@ -222,7 +221,6 @@ export const GermanyTableOnly: StoryObj<SequencesByLocationProps> = {
         lapisFilter: { dateFrom: '2022-01-01', dateTo: '2022-04-01', country: 'Germany' },
         lapisLocationField: 'division',
         width: '100%',
-        height: '700px',
         views: ['table'],
         pageSize: 10,
     },
@@ -247,5 +245,13 @@ export const GermanyTableOnly: StoryObj<SequencesByLocationProps> = {
                 },
             ],
         },
+    },
+};
+
+export const WithFixedHeight: StoryObj<SequencesByLocationProps> = {
+    ...WorldMap,
+    args: {
+        ...WorldMap.args,
+        height: '700px',
     },
 };

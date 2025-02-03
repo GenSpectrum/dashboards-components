@@ -99,7 +99,6 @@ export const TwoDatasets: StoryObj<Required<PrevalenceOverTimeProps>> = {
         views: ['bar', 'line', 'bubble', 'table'],
         confidenceIntervalMethods: ['wilson'],
         width: '100%',
-        height: '700px',
         lapisDateField: 'date',
         pageSize: 10,
         yAxisMaxLinear: 1,
@@ -175,7 +174,6 @@ export const OneDataset: StoryObj<Required<PrevalenceOverTimeProps>> = {
         views: ['bar', 'line', 'bubble', 'table'],
         confidenceIntervalMethods: ['wilson'],
         width: '100%',
-        height: '700px',
         lapisDateField: 'date',
         pageSize: 10,
         yAxisMaxLinear: 1,
@@ -250,5 +248,13 @@ export const OneDatasetOnTableTab: StoryObj<Required<PrevalenceOverTimeProps>> =
         await waitFor(() => expect(canvas.getByRole('button', { name: 'Table' })).toBeInTheDocument());
 
         await fireEvent.click(canvas.getByRole('button', { name: 'Table' }));
+    },
+};
+
+export const WithFixedHeight: StoryObj<Required<PrevalenceOverTimeProps>> = {
+    ...TwoDatasets,
+    args: {
+        ...TwoDatasets.args,
+        height: '700px',
     },
 };

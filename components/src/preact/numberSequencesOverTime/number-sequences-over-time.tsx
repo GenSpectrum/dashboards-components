@@ -21,6 +21,7 @@ import { NoDataDisplay } from '../components/no-data-display';
 import { ResizeContainer } from '../components/resize-container';
 import { ScalingSelector } from '../components/scaling-selector';
 import Tabs from '../components/tabs';
+import { getMaintainAspectRatio } from '../shared/charts/getMaintainAspectRatio';
 import type { ScaleType } from '../shared/charts/getYAxisScale';
 import { useQuery } from '../useQuery';
 
@@ -33,7 +34,7 @@ export type NumberSequencesOverTimeView = z.infer<typeof numberSequencesOverTime
 
 const numberSequencesOverTimePropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     lapisFilters: z.array(namedLapisFilterSchema).min(1),
     lapisDateField: z.string().min(1),
     views: z.array(numberSequencesOverTimeViewSchema),
@@ -89,17 +90,31 @@ interface NumberSequencesOverTimeTabsProps {
 const NumberSequencesOverTimeTabs = ({ data, originalComponentProps }: NumberSequencesOverTimeTabsProps) => {
     const [yAxisScaleType, setYAxisScaleType] = useState<ScaleType>('linear');
 
+    const maintainAspectRatio = getMaintainAspectRatio(originalComponentProps.height);
+
     const getTab = (view: NumberSequencesOverTimeView) => {
         switch (view) {
             case 'bar':
                 return {
                     title: 'Bar',
-                    content: <NumberSequencesOverTimeBarChart data={data} yAxisScaleType={yAxisScaleType} />,
+                    content: (
+                        <NumberSequencesOverTimeBarChart
+                            data={data}
+                            yAxisScaleType={yAxisScaleType}
+                            maintainAspectRatio={maintainAspectRatio}
+                        />
+                    ),
                 };
             case 'line':
                 return {
                     title: 'Line',
-                    content: <NumberSequencesOverTimeLineChart data={data} yAxisScaleType={yAxisScaleType} />,
+                    content: (
+                        <NumberSequencesOverTimeLineChart
+                            data={data}
+                            yAxisScaleType={yAxisScaleType}
+                            maintainAspectRatio={maintainAspectRatio}
+                        />
+                    ),
                 };
             case 'table':
                 return {

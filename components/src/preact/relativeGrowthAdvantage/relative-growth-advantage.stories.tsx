@@ -45,7 +45,6 @@ export const Primary: StoryObj<RelativeGrowthAdvantageProps> = {
         generationTime: 7,
         views: ['line'],
         width: '100%',
-        height: '700px',
         lapisDateField: 'date',
         yAxisMaxLinear: 1,
         yAxisMaxLogarithmic: 1,

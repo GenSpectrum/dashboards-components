@@ -13,7 +13,7 @@ import { useQuery } from '../useQuery';
 
 const statisticsPropsSchema = z.object({
     width: z.string(),
-    height: z.string(),
+    height: z.string().optional(),
     numeratorFilter: lapisFilterSchema,
     denominatorFilter: lapisFilterSchema,
 });
@@ -62,17 +62,17 @@ type MetricDataTabsProps = {
 const MetricDataTabs: FunctionComponent<MetricDataTabsProps> = ({ data }) => {
     const { count, proportion } = data;
     return (
-        <div className='flex flex-col sm:flex-row rounded-md border-2 border-gray-100'>
+        <div className='flex flex-col sm:flex-row rounded-md border-2 border-gray-100 min-w-[180px]'>
             <div className='stat'>
                 <div className='stat-title'>Sequences</div>
                 <div className='stat-value text-2xl sm:text-4xl'>{count.toLocaleString('en-us')}</div>
-                <div className='stat-desc'>The total number of sequenced samples</div>
+                <div className='stat-desc text-wrap'>The total number of sequenced samples</div>
             </div>
 
             <div className='stat'>
                 <div className='stat-title'>Overall proportion</div>
                 <div className='stat-value text-2xl sm:text-4xl'>{formatProportion(proportion)}</div>
-                <div className='stat-desc'>The proportion among all sequenced samples</div>
+                <div className='stat-desc text-wrap'>The proportion among all sequenced samples</div>
             </div>
         </div>
     );
