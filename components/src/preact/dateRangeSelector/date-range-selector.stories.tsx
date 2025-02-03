@@ -2,6 +2,7 @@ import { type Meta, type PreactRenderer, type StoryObj } from '@storybook/preact
 import { expect, fn, userEvent, waitFor, within } from '@storybook/test';
 import type { StepFunction } from '@storybook/types';
 import dayjs from 'dayjs/esm';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { DateRangeSelector, type DateRangeSelectorProps } from './date-range-selector';
 import { previewHandles } from '../../../.storybook/preview';
@@ -28,11 +29,10 @@ const meta: Meta<DateRangeSelectorProps> = {
         fetchMock: {},
     },
     argTypes: {
-        initialValue: {
+        value: {
             control: {
-                type: 'select',
+                type: 'object',
             },
-            options: [dateRangeOptionPresets.lastMonth.label, dateRangeOptionPresets.allTimes.label, 'CustomDateRange'],
         },
         dateRangeOptions: {
             control: {
@@ -53,11 +53,9 @@ const meta: Meta<DateRangeSelectorProps> = {
     args: {
         dateRangeOptions: [dateRangeOptionPresets.lastMonth, dateRangeOptionPresets.allTimes, customDateRange],
         earliestDate,
-        initialValue: dateRangeOptionPresets.lastMonth.label,
+        value: undefined,
         lapisDateField: 'aDateColumn',
         width: '100%',
-        initialDateFrom: undefined,
-        initialDateTo: undefined,
     },
 };
 
@@ -75,7 +73,7 @@ export const SetCorrectInitialValues: StoryObj<DateRangeSelectorProps> = {
     ...Primary,
     args: {
         ...Primary.args,
-        initialValue: 'CustomDateRange',
+        value: 'CustomDateRange',
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -94,7 +92,7 @@ export const SetCorrectInitialDateFrom: StoryObj<DateRangeSelectorProps> = {
     ...Primary,
     args: {
         ...Primary.args,
-        initialDateFrom,
+        value: { dateFrom: initialDateFrom },
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -113,7 +111,7 @@ export const SetCorrectInitialDateTo: StoryObj<DateRangeSelectorProps> = {
     ...Primary,
     args: {
         ...Primary.args,
-        initialDateTo,
+        value: { dateTo: initialDateTo },
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -165,13 +163,76 @@ export const ChangingDateSetsOptionToCustom: StoryObj<DateRangeSelectorProps> = 
     },
 };
 
+export const ChangingTheValueProgrammatically: StoryObj<DateRangeSelectorProps> = {
+    ...Primary,
+    render: (args) => {
+        const StatefulWrapper = () => {
+            const [value, setValue] = useState('Last month');
+            const ref = useRef<HTMLDivElement>(null);
+
+            useEffect(() => {
+                ref.current?.addEventListener('gs-date-range-option-changed', (event) => {
+                    setValue((event as CustomEvent).detail);
+                });
+            }, []);
+
+            return (
+                <div ref={ref}>
+                    <LapisUrlContextProvider value={LAPIS_URL}>
+                        <DateRangeSelector {...args} value={value} />
+                    </LapisUrlContextProvider>
+                    <button className='btn' onClick={() => setValue(customDateRange.label)}>
+                        Set to Custom
+                    </button>
+                    <button className='btn' onClick={() => setValue(dateRangeOptionPresets.lastMonth.label)}>
+                        Set to Last month
+                    </button>
+                </div>
+            );
+        };
+
+        return <StatefulWrapper />;
+    },
+    play: async ({ canvasElement, step }) => {
+        const { canvas, filterChangedListenerMock, optionChangedListenerMock } = await prepare(canvasElement, step);
+
+        await waitFor(async () => {
+            await expect(selectField(canvas)).toHaveValue('Last month');
+        });
+
+        await step('Change the value of the component programmatically', async () => {
+            await userEvent.click(canvas.getByRole('button', { name: 'Set to Custom' }));
+            await waitFor(async () => {
+                await expect(selectField(canvas)).toHaveValue(customDateRange.label);
+            });
+
+            await userEvent.click(canvas.getByRole('button', { name: 'Set to Last month' }));
+            await waitFor(async () => {
+                await expect(selectField(canvas)).toHaveValue('Last month');
+            });
+
+            await expect(filterChangedListenerMock).toHaveBeenCalledTimes(0);
+            await expect(optionChangedListenerMock).toHaveBeenCalledTimes(0);
+        });
+
+        await step('Changing the value from within the component is still possible', async () => {
+            await userEvent.selectOptions(selectField(canvas), 'All times');
+            await waitFor(async () => {
+                await expect(selectField(canvas)).toHaveValue('All times');
+            });
+            await expect(filterChangedListenerMock).toHaveBeenCalledTimes(1);
+            await expect(optionChangedListenerMock).toHaveBeenCalledTimes(1);
+        });
+    },
+};
+
 export const ChangingDateOption: StoryObj<DateRangeSelectorProps> = {
     ...Primary,
     play: async ({ canvasElement, step }) => {
         const { canvas, filterChangedListenerMock, optionChangedListenerMock } = await prepare(canvasElement, step);
 
         await waitFor(async () => {
-            await expect(selectField(canvas)).toHaveValue('Last month');
+            await expect(selectField(canvas)).toHaveValue('Custom');
         });
 
         await step('Change date to custom', async () => {
@@ -203,7 +264,7 @@ export const HandlesInvalidInitialDateFrom: StoryObj<DateRangeSelectorProps> = {
     ...Primary,
     args: {
         ...Primary.args,
-        initialDateFrom: 'not a date',
+        value: { dateFrom: 'not a date' },
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);

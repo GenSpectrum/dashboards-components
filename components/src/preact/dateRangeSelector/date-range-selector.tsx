@@ -1,11 +1,16 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import z from 'zod';
 
 import { computeInitialValues } from './computeInitialValues';
 import { toYYYYMMDD } from './dateConversion';
-import { DateRangeOptionChangedEvent, dateRangeOptionSchema, type DateRangeSelectOption } from './dateRangeOption';
+import {
+    DateRangeOptionChangedEvent,
+    dateRangeOptionSchema,
+    type DateRangeSelectOption,
+    dateRangeValueSchema,
+} from './dateRangeOption';
 import { getDatesForSelectorValue, getSelectableOptions } from './selectableOptions';
 import { ErrorBoundary } from '../components/error-boundary';
 import { Select } from '../components/select';
@@ -16,9 +21,7 @@ const customOption = 'Custom';
 const dateRangeSelectorInnerPropsSchema = z.object({
     dateRangeOptions: z.array(dateRangeOptionSchema),
     earliestDate: z.string().date(),
-    initialValue: z.string().optional(),
-    initialDateFrom: z.string().date().optional(),
-    initialDateTo: z.string().date().optional(),
+    value: dateRangeValueSchema.optional(),
     lapisDateField: z.string().min(1),
 });
 
@@ -45,17 +48,12 @@ export const DateRangeSelector = (props: DateRangeSelectorProps) => {
 export const DateRangeSelectorInner = ({
     dateRangeOptions,
     earliestDate = '1900-01-01',
-    initialValue,
+    value,
     lapisDateField,
-    initialDateFrom,
-    initialDateTo,
 }: DateRangeSelectorInnerProps) => {
-    const initialValues = computeInitialValues(
-        initialValue,
-        initialDateFrom,
-        initialDateTo,
-        earliestDate,
-        dateRangeOptions,
+    const initialValues = useMemo(
+        () => computeInitialValues(value, earliestDate, dateRangeOptions),
+        [value, earliestDate, dateRangeOptions],
     );
 
     const fromDatePickerRef = useRef<HTMLInputElement>(null);
@@ -74,6 +72,12 @@ export const DateRangeSelectorInner = ({
     });
 
     useEffect(() => {
+        setSelectedDateRange(initialValues.initialSelectedDateRange);
+        setSelectedDates({
+            dateFrom: initialValues.initialSelectedDateFrom,
+            dateTo: initialValues.initialSelectedDateTo,
+        });
+
         const commonConfig = {
             allowInput: true,
             dateFormat: 'Y-m-d',
@@ -83,7 +87,7 @@ export const DateRangeSelectorInner = ({
             setDateFromPicker(
                 flatpickr(fromDatePickerRef.current, {
                     ...commonConfig,
-                    defaultDate: selectedDates.dateFrom,
+                    defaultDate: initialValues.initialSelectedDateFrom,
                 }),
             );
         }
@@ -92,17 +96,22 @@ export const DateRangeSelectorInner = ({
             setDateToPicker(
                 flatpickr(toDatePickerRef.current, {
                     ...commonConfig,
-                    defaultDate: selectedDates.dateTo,
+                    defaultDate: initialValues.initialSelectedDateTo,
                 }),
             );
         }
 
         return () => {
-            dateFromPicker?.destroy();
-            dateToPicker?.destroy();
+            setDateFromPicker((prev) => {
+                prev?.destroy();
+                return null;
+            });
+            setDateToPicker((prev) => {
+                prev?.destroy();
+                return null;
+            });
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fromDatePickerRef, toDatePickerRef]);
+    }, [fromDatePickerRef, toDatePickerRef, initialValues]);
 
     const onSelectChange = (value: string) => {
         setSelectedDateRange(value);

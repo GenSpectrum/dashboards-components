@@ -76,7 +76,7 @@ function App() {
             ></gs-location-filter>
             <gs-date-range-selector
                 dateRangeOptions={JSON.stringify(dataRangeOptions)}
-                initialValue={'2021'}
+                value={JSON.stringify(dateRange)}
                 lapisDateField='date'
             ></gs-date-range-selector>
             <div style={{display: 'flex', flexDirection: 'row'}}>
