@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.8](https://github.com/GenSpectrum/dashboard-components/compare/dashboard-components-v0.13.7...dashboard-components-v0.13.8) (2025-02-03)
+
+
+### Bug Fixes
+
+* **components:** trim trailing slash off the `lapis` url that is provided to `gs-app` ([#711](https://github.com/GenSpectrum/dashboard-components/issues/711)) ([091d792](https://github.com/GenSpectrum/dashboard-components/commit/091d792e7adfa45a99d004a69dd4e319a9a530a1)), closes [#703](https://github.com/GenSpectrum/dashboard-components/issues/703)
+
 ## [0.13.7](https://github.com/GenSpectrum/dashboard-components/compare/dashboard-components-v0.13.6...dashboard-components-v0.13.7) (2025-01-31)
 
 
