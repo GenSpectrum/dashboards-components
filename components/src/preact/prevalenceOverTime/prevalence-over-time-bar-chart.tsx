@@ -1,5 +1,6 @@
 import { Chart, type ChartConfiguration, type ChartDataset, registerables, type TooltipItem } from 'chart.js';
 import { BarWithErrorBar, BarWithErrorBarsController } from 'chartjs-chart-error-bars';
+import { useMemo } from 'preact/hooks';
 
 import { maxInData } from './prevalence-over-time';
 import {
@@ -26,6 +27,8 @@ interface PrevalenceOverTimeBarChartProps {
 
 Chart.register(...registerables, LogitScale, BarWithErrorBarsController, BarWithErrorBar);
 
+const NO_DATA = 'noData';
+
 const PrevalenceOverTimeBarChart = ({
     data,
     yAxisScaleType,
@@ -33,45 +36,53 @@ const PrevalenceOverTimeBarChart = ({
     yAxisMaxConfig,
     maintainAspectRatio,
 }: PrevalenceOverTimeBarChartProps) => {
-    const nullFirstData = data
-        .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
-        .map((variantData) => {
-            return {
-                content: variantData.content.sort(sortNullToBeginningThenByDate),
-                displayName: variantData.displayName,
-            };
-        });
+    const config = useMemo<ChartConfiguration | typeof NO_DATA>(() => {
+        const nullFirstData = data
+            .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
+            .map((variantData) => {
+                return {
+                    content: variantData.content.sort(sortNullToBeginningThenByDate),
+                    displayName: variantData.displayName,
+                };
+            });
 
-    if (nullFirstData.length === 0) {
+        if (nullFirstData.length === 0) {
+            return NO_DATA;
+        }
+
+        const datasets = nullFirstData.map((graphData, index) =>
+            getDataset(graphData, index, confidenceIntervalMethod),
+        );
+
+        const maxY =
+            yAxisScaleType !== 'logit'
+                ? getYAxisMax(maxInData(nullFirstData), yAxisMaxConfig?.[yAxisScaleType])
+                : undefined;
+
+        return {
+            type: BarWithErrorBarsController.id,
+            data: {
+                datasets,
+            },
+            options: {
+                maintainAspectRatio,
+                animation: false,
+                scales: {
+                    y: { ...getYAxisScale(yAxisScaleType), max: maxY },
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: tooltip(confidenceIntervalMethod),
+                },
+            },
+        };
+    }, [data, yAxisScaleType, confidenceIntervalMethod, yAxisMaxConfig, maintainAspectRatio]);
+
+    if (config === NO_DATA) {
         return <NoDataDisplay />;
     }
-
-    const datasets = nullFirstData.map((graphData, index) => getDataset(graphData, index, confidenceIntervalMethod));
-
-    const maxY =
-        yAxisScaleType !== 'logit'
-            ? getYAxisMax(maxInData(nullFirstData), yAxisMaxConfig?.[yAxisScaleType])
-            : undefined;
-
-    const config: ChartConfiguration = {
-        type: BarWithErrorBarsController.id,
-        data: {
-            datasets,
-        },
-        options: {
-            maintainAspectRatio,
-            animation: false,
-            scales: {
-                y: { ...getYAxisScale(yAxisScaleType), max: maxY },
-            },
-            plugins: {
-                legend: {
-                    display: false,
-                },
-                tooltip: tooltip(confidenceIntervalMethod),
-            },
-        },
-    };
 
     return <GsChart configuration={config} />;
 };

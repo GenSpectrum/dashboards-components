@@ -1,4 +1,5 @@
 import { Chart, type ChartConfiguration, registerables, type TooltipItem } from 'chart.js';
+import { useMemo } from 'preact/hooks';
 
 import { type YearMonthDayClass } from '../../utils/temporalClass';
 import GsChart from '../components/chart';
@@ -39,31 +40,33 @@ const RelativeGrowthAdvantageChart = ({
     yAxisMaxConfig,
     maintainAspectRatio,
 }: RelativeGrowthAdvantageChartProps) => {
-    const maxY =
-        yAxisScaleType !== 'logit'
-            ? getYAxisMax(Math.max(...data.proportion), yAxisMaxConfig?.[yAxisScaleType])
-            : undefined;
+    const config = useMemo<ChartConfiguration>(() => {
+        const maxY =
+            yAxisScaleType !== 'logit'
+                ? getYAxisMax(Math.max(...data.proportion), yAxisMaxConfig?.[yAxisScaleType])
+                : undefined;
 
-    const config: ChartConfiguration = {
-        type: 'line',
-        data: {
-            labels: data.t,
-            datasets: datasets(data),
-        },
-        options: {
-            maintainAspectRatio,
-            animation: false,
-            scales: {
-                y: { ...getYAxisScale(yAxisScaleType), max: maxY },
+        return {
+            type: 'line',
+            data: {
+                labels: data.t,
+                datasets: datasets(data),
             },
-            plugins: {
-                legend: {
-                    display: false,
+            options: {
+                maintainAspectRatio,
+                animation: false,
+                scales: {
+                    y: { ...getYAxisScale(yAxisScaleType), max: maxY },
                 },
-                tooltip: tooltip(),
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: tooltip(),
+                },
             },
-        },
-    };
+        };
+    }, [data, yAxisScaleType, yAxisMaxConfig, maintainAspectRatio]);
 
     return (
         <div className='flex h-full flex-col'>

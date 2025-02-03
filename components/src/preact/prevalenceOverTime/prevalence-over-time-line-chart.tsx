@@ -1,5 +1,6 @@
 import { Chart, type ChartConfiguration, registerables } from 'chart.js';
 import { type TooltipItem } from 'chart.js/dist/types';
+import { useMemo } from 'preact/hooks';
 
 import { maxInData } from './prevalence-over-time';
 import { type PrevalenceOverTimeData, type PrevalenceOverTimeVariantData } from '../../query/queryPrevalenceOverTime';
@@ -25,6 +26,8 @@ interface PrevalenceOverTimeLineChartProps {
 
 Chart.register(...registerables, LogitScale);
 
+const NO_DATA = 'noData';
+
 const PrevalenceOverTimeLineChart = ({
     data,
     yAxisScaleType,
@@ -32,47 +35,53 @@ const PrevalenceOverTimeLineChart = ({
     yAxisMaxConfig,
     maintainAspectRatio,
 }: PrevalenceOverTimeLineChartProps) => {
-    const nonNullDateRangeData = data
-        .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
-        .map((variantData) => {
-            return {
-                content: variantData.content.filter((dataPoint) => dataPoint.dateRange !== null),
-                displayName: variantData.displayName,
-            };
-        });
+    const config = useMemo<ChartConfiguration | typeof NO_DATA>(() => {
+        const nonNullDateRangeData = data
+            .filter((prevalenceOverTimeData) => prevalenceOverTimeData.content.length > 0)
+            .map((variantData) => {
+                return {
+                    content: variantData.content.filter((dataPoint) => dataPoint.dateRange !== null),
+                    displayName: variantData.displayName,
+                };
+            });
 
-    if (nonNullDateRangeData.length === 0) {
+        if (nonNullDateRangeData.length === 0) {
+            return NO_DATA;
+        }
+
+        const datasets = nonNullDateRangeData
+            .map((graphData, index) => getDataset(graphData, index, confidenceIntervalMethod))
+            .flat();
+
+        const maxY =
+            yAxisScaleType !== 'logit'
+                ? getYAxisMax(maxInData(nonNullDateRangeData), yAxisMaxConfig?.[yAxisScaleType])
+                : undefined;
+
+        return {
+            type: 'line',
+            data: {
+                datasets,
+            },
+            options: {
+                animation: false,
+                maintainAspectRatio,
+                scales: {
+                    y: { ...getYAxisScale(yAxisScaleType), max: maxY },
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: tooltip(confidenceIntervalMethod),
+                },
+            },
+        };
+    }, [data, yAxisScaleType, confidenceIntervalMethod, yAxisMaxConfig, maintainAspectRatio]);
+
+    if (config === NO_DATA) {
         return <NoDataDisplay />;
     }
-
-    const datasets = nonNullDateRangeData
-        .map((graphData, index) => getDataset(graphData, index, confidenceIntervalMethod))
-        .flat();
-
-    const maxY =
-        yAxisScaleType !== 'logit'
-            ? getYAxisMax(maxInData(nonNullDateRangeData), yAxisMaxConfig?.[yAxisScaleType])
-            : undefined;
-
-    const config: ChartConfiguration = {
-        type: 'line',
-        data: {
-            datasets,
-        },
-        options: {
-            animation: false,
-            maintainAspectRatio,
-            scales: {
-                y: { ...getYAxisScale(yAxisScaleType), max: maxY },
-            },
-            plugins: {
-                legend: {
-                    display: false,
-                },
-                tooltip: tooltip(confidenceIntervalMethod),
-            },
-        },
-    };
 
     return <GsChart configuration={config} />;
 };
